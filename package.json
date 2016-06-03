@@ -7,7 +7,7 @@
     "description": "jQuery simple pagination plugin for bootstrap-style webpages",
     "main": "jquery.twbsPagination",
     "dependencies": {
-        "jquery": ">=1.7.0"
+        "jquery": ">=1.7"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
@@ -15,6 +15,10 @@
         "grunt-contrib-watch": "~0.6.1",
         "grunt-contrib-uglify": "^0.9.2",
         "load-grunt-tasks": "^3.1.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/esimakin/twbs-pagination.git"
     },
     "keywords": [
         "pagination",
