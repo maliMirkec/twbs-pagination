@@ -281,7 +281,7 @@
         prevClass: 'prev',
         lastClass: 'last',
         firstClass: 'first',
-        pageClass: 'page',
+        pageClass: 'page-item',
         activeClass: 'active',
         disabledClass: 'disabled'
     };
