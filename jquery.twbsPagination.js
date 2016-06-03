@@ -131,7 +131,7 @@
             var $itemContainer = $('<li></li>'),
                 $itemContent = $('<a></a>'),
                 itemText = null;
-
+                
             itemText = this.options[type] ? this.makeText(this.options[type], page) : page;
             $itemContainer.addClass(this.options[type + 'Class']);
             $itemContainer.data('page', page);
@@ -265,11 +265,11 @@
         loop: false,
         onPageClick: null,
         paginationClass: 'pagination',
-        nextClass: 'next',
-        prevClass: 'prev',
-        lastClass: 'last',
-        firstClass: 'first',
-        pageClass: 'page',
+        nextClass: 'page-item',
+        prevClass: 'page-item',
+        lastClass: 'page-item',
+        firstClass: 'page-item',
+        pageClass: 'page-item',
         activeClass: 'active',
         disabledClass: 'disabled',
         anchorClass: 'page-link'
