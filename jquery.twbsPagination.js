@@ -158,7 +158,7 @@
 
             $itemContainer.data('page', page);
             $itemContainer.data('page-type', type);
-            $itemContainer.append($itemContent.attr('href', this.makeHref(page)).html(itemText));
+            $itemContainer.append($itemContent.attr('href', this.makeHref(page)).html(itemText).addClass('page-link'));
 
             return $itemContainer;
         },
@@ -277,10 +277,10 @@
         loop: false,
         onPageClick: null,
         paginationClass: 'pagination',
-        nextClass: 'next',
-        prevClass: 'prev',
-        lastClass: 'last',
-        firstClass: 'first',
+        nextClass: 'page-item',
+        prevClass: 'page-item',
+        lastClass: 'page-item',
+        firstClass: 'page-item',
         pageClass: 'page-item',
         activeClass: 'active',
         disabledClass: 'disabled'
