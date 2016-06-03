@@ -1,8 +1,8 @@
-/*!
- * jQuery pagination plugin v1.4
- * http://esimakin.github.io/twbs-pagination/
+/*
+ * jQuery Bootstrap Pagination v1.3.1
+ * https://github.com/esimakin/twbs-pagination
  *
- * Copyright 2014-2015, Eugene Simakin
+ * Copyright 2014-2015 Eugene Simakin <eugenesimakin@mail.ru>
  * Released under Apache 2.0 license
  * http://apache.org/licenses/LICENSE-2.0.html
  */
@@ -42,7 +42,7 @@
 
         if (this.options.href) {
             var match, regexp = this.options.href.replace(/[-\/\\^$*+?.|[\]]/g, '\\$&');
-            regexp = regexp.replace(this.options.pageVariable, '(\\d+)');
+            regexp = regexp.replace(this.options.hrefVariable, '(\\d+)');
             if ((match = new RegExp(regexp, 'i').exec(window.location.href)) != null) {
                 this.options.startPage = parseInt(match[1], 10);
             }
@@ -63,11 +63,11 @@
             this.$element.append(this.$listContainer);
         }
 
+        this.render(this.getPages(this.options.startPage));
+        this.setupEvents();
+
         if (this.options.initiateStartPageClick) {
-            this.show(this.options.startPage);
-        } else {
-            this.render(this.getPages(this.options.startPage));
-            this.setupEvents();
+            this.$element.trigger('page', this.options.startPage);
         }
 
         return this;
@@ -101,25 +101,24 @@
         buildListItems: function (pages) {
             var listItems = [];
 
-            // Add "first" page button
             if (this.options.first) {
                 listItems.push(this.buildItem('first', 1));
             }
-            // Add "previous" page button
+
             if (this.options.prev) {
                 var prev = pages.currentPage > 1 ? pages.currentPage - 1 : this.options.loop ? this.options.totalPages  : 1;
                 listItems.push(this.buildItem('prev', prev));
             }
-            // Add "pages"
+
             for (var i = 0; i < pages.numeric.length; i++) {
                 listItems.push(this.buildItem('page', pages.numeric[i]));
             }
-            // Add "next" page button
+
             if (this.options.next) {
                 var next = pages.currentPage < this.options.totalPages ? pages.currentPage + 1 : this.options.loop ? 1 : this.options.totalPages;
                 listItems.push(this.buildItem('next', next));
             }
-            // Add "last" page button
+
             if (this.options.last) {
                 listItems.push(this.buildItem('last', this.options.totalPages));
             }
@@ -131,12 +130,35 @@
             var $itemContainer = $('<li></li>'),
                 $itemContent = $('<a></a>'),
                 itemText = null;
-                
-            itemText = this.options[type] ? this.makeText(this.options[type], page) : page;
-            $itemContainer.addClass(this.options[type + 'Class']);
+
+            switch (type) {
+                case 'page':
+                    itemText = page;
+                    $itemContainer.addClass(this.options.pageClass);
+                    break;
+                case 'first':
+                    itemText = this.options.first;
+                    $itemContainer.addClass(this.options.firstClass);
+                    break;
+                case 'prev':
+                    itemText = this.options.prev;
+                    $itemContainer.addClass(this.options.prevClass);
+                    break;
+                case 'next':
+                    itemText = this.options.next;
+                    $itemContainer.addClass(this.options.nextClass);
+                    break;
+                case 'last':
+                    itemText = this.options.last;
+                    $itemContainer.addClass(this.options.lastClass);
+                    break;
+                default:
+                    break;
+            }
+
             $itemContainer.data('page', page);
             $itemContainer.data('page-type', type);
-            $itemContainer.append($itemContent.attr('href', this.makeHref(page)).addClass(this.options.anchorClass).html(itemText));
+            $itemContainer.append($itemContent.attr('href', this.makeHref(page)).html(itemText));
 
             return $itemContainer;
         },
@@ -170,10 +192,7 @@
         render: function (pages) {
             var _this = this;
             this.$listContainer.children().remove();
-            var items = this.buildListItems(pages);
-            jQuery.each(items, function(key, item){
-                _this.$listContainer.append(item);
-            });
+            this.$listContainer.append(this.buildListItems(pages));
 
             this.$listContainer.children().each(function () {
                 var $this = $(this),
@@ -222,13 +241,8 @@
             });
         },
 
-        makeHref: function (page) {
-            return this.options.href ? this.makeText(this.options.href, page) : "#";
-        },
-
-        makeText: function (text, page) {
-            return text.replace(this.options.pageVariable, page)
-                .replace(this.options.totalPagesVariable, this.options.totalPages)
+        makeHref: function (c) {
+            return this.options.href ? this.options.href.replace(this.options.hrefVariable, c) : "#";
         }
 
     };
@@ -241,7 +255,7 @@
 
         var $this = $(this);
         var data = $this.data('twbs-pagination');
-        var options = typeof option === 'object' ? option : {};
+        var options = typeof option === 'object' && option;
 
         if (!data) $this.data('twbs-pagination', (data = new TwbsPagination(this, options) ));
         if (typeof option === 'string') methodReturn = data[ option ].apply(data, args);
@@ -250,14 +264,12 @@
     };
 
     $.fn.twbsPagination.defaults = {
-        totalPages: 1,
+        totalPages: 0,
         startPage: 1,
         visiblePages: 5,
         initiateStartPageClick: true,
         href: false,
-        pageVariable: '{{page}}',
-        totalPagesVariable: '{{total_pages}}',
-        page: null,
+        hrefVariable: '{{number}}',
         first: 'First',
         prev: 'Previous',
         next: 'Next',
@@ -265,14 +277,13 @@
         loop: false,
         onPageClick: null,
         paginationClass: 'pagination',
-        nextClass: 'page-item',
-        prevClass: 'page-item',
-        lastClass: 'page-item',
-        firstClass: 'page-item',
-        pageClass: 'page-item',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first',
+        pageClass: 'page',
         activeClass: 'active',
-        disabledClass: 'disabled',
-        anchorClass: 'page-link'
+        disabledClass: 'disabled'
     };
 
     $.fn.twbsPagination.Constructor = TwbsPagination;
